@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CareOS — Design Mockups</title>
+  <meta name="description" content="CareOS Interactive Design Mockups — 13 Screens">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CareOS Design">
+  <meta name="theme-color" content="#0D1117">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A6B8A'/%3E%3Crect x='25' y='10' width='50' height='80' rx='10' fill='white' opacity='0.9'/%3E%3Cline x1='25' y1='50' x2='75' y2='50' stroke='%231A6B8A' stroke-width='6'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A6B8A'/%3E%3Crect x='25' y='10' width='50' height='80' rx='10' fill='white' opacity='0.9'/%3E%3Cline x1='25' y1='50' x2='75' y2='50' stroke='%231A6B8A' stroke-width='6'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #0D1117; overflow-x: hidden; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #E2E6EC; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+  <script type="text/babel">
+
+// ─── DESIGN TOKENS ───
+const T = {
+  primary: "#1A6B8A",
+  primaryLight: "#2A8BAA",
+  primaryDark: "#0F4F68",
+  primarySoft: "#E8F4F8",
+  accent: "#E8734A",
+  accentSoft: "#FFF0EB",
+  success: "#2D9E6E",
+  successSoft: "#E6F7EF",
+  warning: "#D4890B",
+  warningSoft: "#FFF8E8",
+  danger: "#C43D3D",
+  dangerSoft: "#FDE8E8",
+  bg: "#F7F8FA",
+  card: "#FFFFFF",
+  border: "#E2E6EC",
+  borderLight: "#F0F2F5",
+  text: "#1A2332",
+  textSecondary: "#5A6578",
+  textMuted: "#8F99A8",
+  font: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+  xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32,
+  r: 12, rLg: 16, rXl: 24, rFull: 9999,
+};
+
+// ─── ICONS ───
+const I = ({ name, size = 20, color = T.textSecondary, sw = 2 }) => {
+  const p = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: sw, strokeLinecap: "round", strokeLinejoin: "round" };
+  const icons = {
+    pill: <svg {...p}><rect x="7" y="3" width="10" height="18" rx="2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>,
+    home: <svg {...p}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>,
+    users: <svg {...p}><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>,
+    shield: <svg {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+    file: <svg {...p}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>,
+    check: <svg {...p}><polyline points="20,6 9,17 4,12"/></svg>,
+    checkCircle: <svg {...p}><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22,4 12,14.01 9,11.01"/></svg>,
+    clock: <svg {...p}><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>,
+    alert: <svg {...p}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+    camera: <svg {...p}><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>,
+    bell: <svg {...p}><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>,
+    chevron: <svg {...p}><polyline points="9,18 15,12 9,6"/></svg>,
+    back: <svg {...p}><polyline points="15,18 9,12 15,6"/></svg>,
+    search: <svg {...p}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+    plus: <svg {...p}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
+    scan: <svg {...p}><path d="M7 3H5a2 2 0 00-2 2v2m14-4h2a2 2 0 012 2v2M3 17v2a2 2 0 002 2h2m10 0h2a2 2 0 002-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>,
+    settings: <svg {...p}><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33"/></svg>,
+    star: <svg {...p}><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>,
+    download: <svg {...p}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
+    layout: <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>,
+    activity: <svg {...p}><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>,
+    mail: <svg {...p}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
+    lock: <svg {...p}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
+    eye: <svg {...p}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>,
+    phone: <svg {...p}><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>,
+    globe: <svg {...p}><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>,
+    zap: <svg {...p}><polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/></svg>,
+    heart: <svg {...p}><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>,
+    clipboard: <svg {...p}><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>,
+    barChart: <svg {...p}><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>,
+    arrowRight: <svg {...p}><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>,
+    logIn: <svg {...p}><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>,
+    calendar: <svg {...p}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
+    package: <svg {...p}><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27,6.96 12,12.01 20.73,6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+    truck: <svg {...p}><rect x="1" y="3" width="15" height="13"/><polygon points="16,8 20,8 23,11 23,16 16,16 16,8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>,
+    userPlus: <svg {...p}><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>,
+    x: <svg {...p}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+    edit: <svg {...p}><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
+    moon: <svg {...p}><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>,
+    helpCircle: <svg {...p}><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+    logOut: <svg {...p}><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
+    toggleRight: <svg {...p}><rect x="1" y="5" width="22" height="14" rx="7" ry="7"/><circle cx="16" cy="12" r="3"/></svg>,
+    toggleLeft: <svg {...p}><rect x="1" y="5" width="22" height="14" rx="7" ry="7"/><circle cx="8" cy="12" r="3"/></svg>,
+    droplet: <svg {...p}><path d="M12 2.69l5.66 5.66a8 8 0 11-11.31 0z"/></svg>,
+    thermometer: <svg {...p}><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>,
+    fileText: <svg {...p}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>,
+    image: <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>,
+  };
+  return icons[name] || null;
+};
+
+// ─── SHARED COMPONENTS ───
+const Badge = ({ text, color = T.primary, bg = T.primarySoft, small }) => (
+  <span style={{ display: "inline-flex", alignItems: "center", padding: small ? "1px 6px" : "2px 10px", borderRadius: T.rFull, fontSize: small ? 9 : 11, fontWeight: 600, letterSpacing: 0.3, color, background: bg }}>{text}</span>
+);
+
+const Phone = ({ children }) => (
+  <div style={{ width: 375, minHeight: 720, background: "#000", borderRadius: 44, padding: 12, boxShadow: "0 32px 100px rgba(0,0,0,0.2), 0 8px 32px rgba(0,0,0,0.15)", flexShrink: 0 }}>
+    <div style={{ background: T.bg, borderRadius: 34, minHeight: 696, overflow: "hidden", display: "flex", flexDirection: "column", position: "relative" }}>
+      <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 160, height: 30, background: "#000", borderRadius: "0 0 22px 22px", zIndex: 10 }} />
+      <div style={{ height: 48, display: "flex", alignItems: "flex-end", justifyContent: "space-between", padding: "0 28px 4px", fontSize: 13, fontWeight: 600, color: T.text }}>
+        <span>9:41</span><span style={{ fontSize: 10, letterSpacing: 1 }}>●●● ▐█▌ 84%</span>
+      </div>
+      {children}
+      <div style={{ padding: "8px 0 6px", display: "flex", justifyContent: "center" }}>
+        <div style={{ width: 134, height: 5, background: T.text, borderRadius: 3, opacity: 0.15 }} />
+      </div>
+    </div>
+  </div>
+);
+
+const BottomNav = ({ active = "medpass" }) => (
+  <div style={{ display: "flex", background: T.card, borderTop: `1px solid ${T.border}`, padding: "6px 0 0" }}>
+    {[
+      { id: "medpass", icon: "pill", label: "Med Pass" },
+      { id: "residents", icon: "users", label: "Residents" },
+      { id: "scan", icon: "scan", label: "Scan" },
+      { id: "notes", icon: "file", label: "Docs" },
+      { id: "alerts", icon: "bell", label: "Alerts" },
+    ].map((item) => (
+      <div key={item.id} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 0", cursor: "pointer" }}>
+        {item.id === "scan" ? (
+          <div style={{ width: 40, height: 40, borderRadius: "50%", background: `linear-gradient(135deg, ${T.primary}, ${T.accent})`, display: "flex", alignItems: "center", justifyContent: "center", marginTop: -16, boxShadow: `0 4px 14px ${T.primary}44` }}>
+            <I name="scan" size={20} color="#fff" />
+          </div>
+        ) : (
+          <><I name={item.icon} size={20} color={active === item.id ? T.primary : T.textMuted} /><span style={{ fontSize: 10, fontWeight: active === item.id ? 700 : 500, color: active === item.id ? T.primary : T.textMuted }}>{item.label}</span></>
+        )}
+      </div>
+    ))}
+  </div>
+);
+
+const Header = ({ title, subtitle, onBack }) => (
+  <div style={{ padding: "8px 16px", background: T.card, borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 10 }}>
+    {onBack && <div onClick={onBack} style={{ width: 34, height: 34, borderRadius: 10, background: T.bg, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}><I name="back" size={18} color={T.text} /></div>}
+    <div><div style={{ fontSize: 17, fontWeight: 700, color: T.text }}>{title}</div>{subtitle && <div style={{ fontSize: 11, color: T.textSecondary }}>{subtitle}</div>}</div>
+  </div>
+);
+
+const InputField = ({ label, placeholder, icon, type }) => (
+  <div>
+    <div style={{ fontSize: 12, fontWeight: 600, color: T.textSecondary, marginBottom: 4 }}>{label}</div>
+    <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 13px", borderRadius: T.r, border: `1.5px solid ${T.border}`, background: T.bg }}>
+      {icon && <I name={icon} size={16} color={T.textMuted} />}
+      <span style={{ fontSize: 14, color: T.textMuted }}>{placeholder}</span>
+    </div>
+  </div>
+);
+
+const Btn = ({ children, secondary, small, onClick }) => (
+  <div onClick={onClick} style={{ padding: small ? "10px 16px" : "14px", borderRadius: T.rLg, background: secondary ? T.card : `linear-gradient(135deg, ${T.primary}, ${T.primaryLight})`, color: secondary ? T.primary : "#fff", textAlign: "center", fontSize: small ? 13 : 15, fontWeight: 700, cursor: "pointer", border: secondary ? `1.5px solid ${T.primary}33` : "none" }}>{children}</div>
+);
+
+// ──────────────────────────────────────────
+// SCREEN 1: MED PASS FLOW
+// ──────────────────────────────────────────
+const MedPassScreen = () => {
+  const [screen, setScreen] = useState("queue");
+  const [checked, setChecked] = useState({});
+  const allChecked = Object.keys(checked).length === 4 && Object.values(checked).every(Boolean);
+  const residents = [
+    { name: "Dorothy M.", time: "8:00 AM", meds: 4, avatar: "DM", urgency: "overdue" },
+    { name: "Robert K.", time: "8:00 AM", meds: 3, avatar: "RK", urgency: "now" },
+    { name: "Helen W.", time: "8:00 AM", meds: 5, avatar: "HW", urgency: "now" },
+    { name: "James T.", time: "8:30 AM", meds: 2, avatar: "JT", urgency: "soon" },
+    { name: "Patricia L.", time: "9:00 AM", meds: 6, avatar: "PL", urgency: "later" },
+    { name: "George A.", time: "9:00 AM", meds: 3, avatar: "GA", urgency: "done" },
+  ];
+  const uc = { overdue: { bg: T.dangerSoft, c: T.danger, l: "OVERDUE" }, now: { bg: T.accentSoft, c: T.accent, l: "DUE NOW" }, soon: { bg: T.warningSoft, c: T.warning, l: "8:30 AM" }, later: { bg: T.primarySoft, c: T.primary, l: "9:00 AM" }, done: { bg: T.successSoft, c: T.success, l: "DONE ✓" } };
+  const meds = [
+    { name: "Lisinopril", dose: "10mg", route: "Oral", freq: "Daily", color: "#4A90D9" },
+    { name: "Metformin", dose: "500mg", route: "Oral", freq: "2x daily", color: "#D4890B" },
+    { name: "Amlodipine", dose: "5mg", route: "Oral", freq: "Daily", color: "#2D9E6E" },
+    { name: "Omeprazole", dose: "20mg", route: "Oral", freq: "Daily", color: "#8B5CF6" },
+  ];
+
+  if (screen === "confirm") return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, background: T.card }}>
+      <div style={{ width: 72, height: 72, borderRadius: "50%", background: T.successSoft, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}><I name="check" size={36} color={T.success} /></div>
+      <div style={{ fontSize: 20, fontWeight: 700, color: T.text, marginBottom: 4 }}>Med Pass Complete</div>
+      <div style={{ fontSize: 14, color: T.textSecondary, marginBottom: 2 }}>Dorothy M. · 4 medications</div>
+      <div style={{ fontSize: 12, color: T.textMuted, marginBottom: 16 }}>Recorded at 8:03 AM by Caregiver Maria</div>
+      <Badge text="Total time: 47 seconds" color={T.success} bg={T.successSoft} />
+      <div onClick={() => { setScreen("queue"); setChecked({}); }} style={{ marginTop: 24 }}><Btn>Next Resident →</Btn></div>
+    </div>
+  );
+  if (screen === "active") return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="Dorothy M." subtitle="4 medications · 8:00 AM" onBack={() => setScreen("queue")} />
+      <div style={{ margin: "8px 16px", padding: "8px 12px", background: T.dangerSoft, borderRadius: T.r, border: `1px solid ${T.danger}33`, display: "flex", alignItems: "center", gap: 8 }}>
+        <I name="alert" size={14} color={T.danger} /><span style={{ fontSize: 12, fontWeight: 600, color: T.danger }}>⚠ Allergy: Penicillin, Sulfa</span>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "4px 16px 16px" }}>
+        {meds.map((m, i) => (
+          <div key={i} onClick={() => setChecked(p => ({ ...p, [i]: !p[i] }))} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", marginBottom: 8, background: T.card, borderRadius: T.r, border: `1.5px solid ${checked[i] ? T.success : T.border}`, cursor: "pointer" }}>
+            <div style={{ width: 6, height: 36, borderRadius: 3, background: m.color, flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: checked[i] ? T.success : T.text, textDecoration: checked[i] ? "line-through" : "none" }}>{m.name}</div>
+              <div style={{ fontSize: 12, color: T.textSecondary }}>{m.dose} · {m.route} · {m.freq}</div>
+            </div>
+            <div style={{ width: 28, height: 28, borderRadius: 8, background: checked[i] ? T.success : T.borderLight, border: `2px solid ${checked[i] ? T.success : T.border}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {checked[i] && <I name="check" size={14} color="#fff" />}
+            </div>
+          </div>
+        ))}
+        <div onClick={() => allChecked && setScreen("confirm")} style={{ marginTop: 8, padding: 14, borderRadius: T.rLg, background: allChecked ? `linear-gradient(135deg, ${T.primary}, ${T.primaryLight})` : T.borderLight, color: allChecked ? "#fff" : T.textMuted, textAlign: "center", fontSize: 15, fontWeight: 700, cursor: allChecked ? "pointer" : "default" }}>
+          {allChecked ? "Complete Med Pass ✓" : `Confirm All (${Object.values(checked).filter(Boolean).length}/4)`}
+        </div>
+      </div>
+      <BottomNav active="medpass" />
+    </div>
+  );
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "10px 20px 8px", background: T.card }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div><div style={{ fontSize: 20, fontWeight: 700, color: T.text }}>Med Pass</div><div style={{ fontSize: 12, color: T.textSecondary }}>Morning Round · 6 residents</div></div>
+          <div style={{ width: 34, height: 34, borderRadius: 10, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="search" size={16} color={T.primary} /></div>
+        </div>
+        <div style={{ marginTop: 10, background: T.borderLight, borderRadius: 6, height: 7, overflow: "hidden" }}>
+          <div style={{ width: "17%", height: "100%", background: `linear-gradient(90deg, ${T.success}, ${T.primary})`, borderRadius: 6 }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 3, fontSize: 10, color: T.textMuted }}><span>1 of 6 complete</span><span>Est. 8 min</span></div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "6px 16px 16px" }}>
+        {residents.map((r, i) => { const u = uc[r.urgency]; return (
+          <div key={i} onClick={() => r.urgency !== "done" && setScreen("active")} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 13px", marginBottom: 6, background: T.card, borderRadius: T.r, border: `1.5px solid ${r.urgency === "overdue" ? u.c : T.border}`, cursor: r.urgency === "done" ? "default" : "pointer", opacity: r.urgency === "done" ? 0.55 : 1 }}>
+            <div style={{ width: 42, height: 42, borderRadius: 13, background: r.urgency === "done" ? T.successSoft : T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: r.urgency === "done" ? T.success : T.primary }}>{r.urgency === "done" ? <I name="check" size={18} color={T.success} /> : r.avatar}</div>
+            <div style={{ flex: 1 }}><div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{r.name}</div><div style={{ fontSize: 11, color: T.textSecondary }}>{r.meds} medications · {r.time}</div></div>
+            <Badge text={u.l} color={u.c} bg={u.bg} small />
+          </div>
+        ); })}
+      </div>
+      <BottomNav active="medpass" />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 2: AI ORDER PROCESSING
+// ──────────────────────────────────────────
+const AIOrderScreen = () => {
+  const [step, setStep] = useState(0);
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="New Doctor Order" subtitle="Scan or photograph the order" />
+      <div style={{ flex: 1, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+        {step === 0 && (<>
+          <div onClick={() => setStep(1)} style={{ flex: 1, minHeight: 200, background: `linear-gradient(135deg, ${T.primarySoft}, #EEF6F9)`, borderRadius: T.rLg, border: `2px dashed ${T.primary}44`, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, cursor: "pointer" }}>
+            <div style={{ width: 64, height: 64, borderRadius: "50%", background: `linear-gradient(135deg, ${T.primary}, ${T.accent})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 24px ${T.primary}33` }}><I name="camera" size={28} color="#fff" /></div>
+            <div style={{ fontSize: 15, fontWeight: 600, color: T.primary }}>Tap to Photograph Order</div>
+            <div style={{ fontSize: 12, color: T.textMuted }}>AI will extract medication details</div>
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ flex: 1, padding: 14, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, textAlign: "center", cursor: "pointer" }}><I name="file" size={20} color={T.textSecondary} /><div style={{ fontSize: 11, color: T.textSecondary, marginTop: 4 }}>Upload File</div></div>
+            <div style={{ flex: 1, padding: 14, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, textAlign: "center", cursor: "pointer" }}><I name="clipboard" size={20} color={T.textSecondary} /><div style={{ fontSize: 11, color: T.textSecondary, marginTop: 4 }}>Manual Entry</div></div>
+          </div>
+        </>)}
+        {step === 1 && (
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16 }}>
+            <div style={{ width: 56, height: 56, borderRadius: "50%", border: `3px solid ${T.primary}`, borderTopColor: "transparent", animation: "spin 1s linear infinite" }} />
+            <div style={{ fontSize: 15, fontWeight: 600, color: T.text }}>Reading Doctor's Order...</div>
+            <div style={{ fontSize: 12, color: T.textMuted }}>Decoding medical abbreviations</div>
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            {setTimeout(() => setStep(2), 2000) && null}
+          </div>
+        )}
+        {step === 2 && (<>
+          <div style={{ padding: "10px 12px", background: T.successSoft, borderRadius: T.r, border: `1px solid ${T.success}33`, display: "flex", alignItems: "center", gap: 8 }}>
+            <I name="checkCircle" size={16} color={T.success} /><span style={{ fontSize: 13, fontWeight: 600, color: T.success }}>AI Extraction Complete — Review Below</span>
+          </div>
+          {[{ label: "Medication", value: "Metoprolol Succinate ER", conf: 98 },{ label: "Dosage", value: "50mg", conf: 97 },{ label: "Route", value: "By mouth (PO)", conf: 99 },{ label: "Frequency", value: "Once daily, morning", conf: 94 },{ label: "Prescriber", value: "Dr. Sarah Chen, MD", conf: 91 }].map((f, i) => (
+            <div key={i} style={{ padding: "10px 13px", background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.5 }}>{f.label}</span>
+                <Badge text={`${f.conf}%`} color={f.conf >= 90 ? T.success : T.warning} bg={f.conf >= 90 ? T.successSoft : T.warningSoft} small />
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{f.value}</div>
+            </div>
+          ))}
+          <Btn onClick={() => setStep(0)}>Confirm & Add to Pending</Btn>
+        </>)}
+      </div>
+      <BottomNav />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 3: OWNER DASHBOARD (Web)
+// ──────────────────────────────────────────
+const OwnerDashboard = () => {
+  const sideItems = [
+    { icon: "layout", label: "Dashboard", active: true },{ icon: "pill", label: "Medications" },{ icon: "users", label: "Residents" },
+    { icon: "clipboard", label: "Staff" },{ icon: "shield", label: "Inspection" },{ icon: "file", label: "Documents" },
+    { icon: "barChart", label: "Reports" },{ icon: "settings", label: "Settings" },
+  ];
+  return (
+    <div style={{ display: "flex", height: "100%", minHeight: 560, background: T.bg, borderRadius: T.r, overflow: "hidden", border: `1px solid ${T.border}` }}>
+      <div style={{ width: 220, background: T.primaryDark, padding: "20px 12px", display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "0 8px", marginBottom: 28 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${T.primary}, ${T.accent})`, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="pill" size={16} color="#fff" /></div>
+          <span style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>CareOS</span>
+        </div>
+        {sideItems.map((s, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", borderRadius: 8, marginBottom: 2, background: s.active ? "#ffffff15" : "transparent", cursor: "pointer" }}>
+            <I name={s.icon} size={18} color={s.active ? "#fff" : "#8BAAB8"} /><span style={{ fontSize: 13, fontWeight: s.active ? 600 : 400, color: s.active ? "#fff" : "#8BAAB8" }}>{s.label}</span>
+          </div>
+        ))}
+        <div style={{ flex: 1 }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", borderTop: "1px solid #ffffff15", marginTop: 12 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: T.primary, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff" }}>DT</div>
+          <div><div style={{ fontSize: 12, fontWeight: 600, color: "#fff" }}>Dawit T.</div><div style={{ fontSize: 10, color: "#8BAAB8" }}>3 homes</div></div>
+        </div>
+      </div>
+      <div style={{ flex: 1, padding: 24, overflowY: "auto" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <div><div style={{ fontSize: 22, fontWeight: 700, color: T.text }}>Good Morning, Dawit</div><div style={{ fontSize: 13, color: T.textSecondary }}>3 homes · 18 residents · Tuesday, Feb 25</div></div>
+          <div style={{ position: "relative", width: 36, height: 36, borderRadius: 10, background: T.card, border: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+            <I name="bell" size={18} color={T.textSecondary} />
+            <div style={{ position: "absolute", top: -3, right: -3, width: 14, height: 14, borderRadius: "50%", background: T.danger, border: "2px solid #fff", fontSize: 8, fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>3</div>
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 20 }}>
+          {[{ name: "Renton Home", beds: "6/6", score: 94, label: "All Clear", color: T.success, meds: "6/6" },{ name: "Kent Home", beds: "6/6", score: 88, label: "1 Alert", color: T.warning, meds: "4/6" },{ name: "Snohomish Home", beds: "5/6", score: 76, label: "Action Needed", color: T.danger, meds: "2/6" }].map((h, i) => (
+            <div key={i} style={{ background: T.card, borderRadius: T.rLg, padding: 18, border: `1px solid ${T.border}`, borderTop: `3px solid ${h.color}`, cursor: "pointer" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 12 }}><div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>{h.name}</div><Badge text={h.label} color={h.color} bg={`${h.color}18`} small /></div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                <div><div style={{ fontSize: 10, color: T.textMuted }}>Occupancy</div><div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>{h.beds}</div></div>
+                <div><div style={{ fontSize: 10, color: T.textMuted }}>Readiness</div><div style={{ fontSize: 18, fontWeight: 700, color: h.color }}>{h.score}%</div></div>
+                <div style={{ gridColumn: "span 2" }}>
+                  <div style={{ fontSize: 10, color: T.textMuted, marginBottom: 4 }}>AM Med Pass</div>
+                  <div style={{ background: T.borderLight, borderRadius: 3, height: 5, overflow: "hidden" }}><div style={{ width: `${(parseInt(h.meds) / 6) * 100}%`, height: "100%", background: parseInt(h.meds) === 6 ? T.success : h.color, borderRadius: 3 }} /></div>
+                  <div style={{ fontSize: 10, color: T.textSecondary, marginTop: 2 }}>{h.meds} complete</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1.8fr 1fr", gap: 14 }}>
+          <div style={{ background: T.card, borderRadius: T.rLg, padding: 18, border: `1px solid ${T.border}` }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: T.text, marginBottom: 12 }}>Active Alerts</div>
+            {[{ text: "Snohomish: Care Plan overdue — Robert K.", level: "danger" },{ text: "Kent: Evening med pass 45 min overdue", level: "warning" },{ text: "Maria R. CPR cert expires in 12 days", level: "warning" },{ text: "New doctor order pending — Dorothy M.", level: "primary" }].map((a, i) => {
+              const c = { danger: T.danger, warning: T.warning, primary: T.primary }[a.level];
+              return <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "9px 12px", marginBottom: 6, background: `${c}12`, borderRadius: 8, cursor: "pointer" }}><I name={a.level === "danger" ? "alert" : "clock"} size={14} color={c} /><span style={{ fontSize: 12, color: c, fontWeight: 500, flex: 1 }}>{a.text}</span><I name="chevron" size={12} color={c} /></div>;
+            })}
+          </div>
+          <div style={{ background: T.card, borderRadius: T.rLg, padding: 18, border: `1px solid ${T.border}` }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: T.text, marginBottom: 12 }}>Staff Credentials</div>
+            {[{ name: "Maria R.", cert: "CPR/First Aid", val: "12d", s: "warning" },{ name: "James T.", cert: "Annual CE", val: "4/12 hrs", s: "danger" },{ name: "Fatuma A.", cert: "Background", val: "45d", s: "ok" },{ name: "Dawit T.", cert: "HCA Cert", val: "180d", s: "ok" }].map((s, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 0", borderBottom: i < 3 ? `1px solid ${T.borderLight}` : "none" }}>
+                <div style={{ width: 28, height: 28, borderRadius: 8, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: T.primary }}>{s.name.split(" ").map(w => w[0]).join("")}</div>
+                <div style={{ flex: 1 }}><div style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{s.name}</div><div style={{ fontSize: 10, color: T.textMuted }}>{s.cert}</div></div>
+                <Badge text={s.val} color={s.s === "ok" ? T.success : s.s === "warning" ? T.warning : T.danger} bg={s.s === "ok" ? T.successSoft : s.s === "warning" ? T.warningSoft : T.dangerSoft} small />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 4: INSPECTION READINESS
+// ──────────────────────────────────────────
+const InspectionScreen = () => (
+  <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+    <Header title="Inspection Readiness" onBack={() => {}} />
+    <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+      <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
+        <div style={{ position: "relative", width: 110, height: 110 }}>
+          <svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="48" fill="none" stroke={T.borderLight} strokeWidth="9" /><circle cx="55" cy="55" r="48" fill="none" stroke={T.primary} strokeWidth="9" strokeDasharray={`${2 * Math.PI * 48 * 0.87} ${2 * Math.PI * 48}`} strokeLinecap="round" transform="rotate(-90 55 55)" /></svg>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ fontSize: 26, fontWeight: 800, color: T.text }}>87<span style={{ fontSize: 13 }}>%</span></div>
+            <div style={{ fontSize: 9, color: T.textMuted, fontWeight: 600 }}>READY</div>
+          </div>
+        </div>
+      </div>
+      {[{ cat: "Medication Records", score: 95, icon: "pill", items: "All MARs current", s: "good" },{ cat: "Staff Credentials", score: 78, icon: "users", items: "2 items need attention", s: "warn" },{ cat: "Care Plans", score: 90, icon: "file", items: "1 review due in 5 days", s: "good" },{ cat: "Emergency Drills", score: 65, icon: "alert", items: "Fire drill OVERDUE", s: "bad" },{ cat: "Policies & Procedures", score: 100, icon: "shield", items: "All current", s: "perfect" }].map((c, i) => {
+        const sc = c.s === "bad" ? T.danger : c.s === "warn" ? T.warning : T.success;
+        return (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: 12, marginBottom: 6, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, cursor: "pointer" }}>
+            <div style={{ width: 38, height: 38, borderRadius: 11, background: `${sc}15`, display: "flex", alignItems: "center", justifyContent: "center" }}><I name={c.icon} size={17} color={sc} /></div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{c.cat}</span><span style={{ fontSize: 13, fontWeight: 700, color: sc }}>{c.score}%</span></div>
+              <div style={{ fontSize: 10, color: T.textSecondary, marginTop: 2 }}>{c.items}</div>
+              <div style={{ marginTop: 5, background: T.borderLight, borderRadius: 3, height: 4, overflow: "hidden" }}><div style={{ width: `${c.score}%`, height: "100%", background: sc, borderRadius: 3 }} /></div>
+            </div>
+            <I name="chevron" size={14} color={T.textMuted} />
+          </div>
+        );
+      })}
+    </div>
+    <BottomNav />
+  </div>
+);
+
+// ──────────────────────────────────────────
+// SCREEN 5: ONBOARDING & SIGNUP
+// ──────────────────────────────────────────
+const OnboardingScreen = () => {
+  const [page, setPage] = useState(0);
+  if (page === 1) return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", background: T.card }}>
+      <div style={{ padding: "16px 20px 12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 20 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${T.primary}, ${T.accent})`, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="pill" size={15} color="#fff" /></div>
+          <span style={{ fontSize: 17, fontWeight: 700, color: T.text }}>CareOS</span>
+        </div>
+        <div style={{ fontSize: 22, fontWeight: 700, color: T.text, marginBottom: 4 }}>Create Your Account</div>
+        <div style={{ fontSize: 13, color: T.textSecondary }}>Get started in under 2 minutes</div>
+      </div>
+      <div style={{ flex: 1, padding: "0 20px", display: "flex", flexDirection: "column", gap: 12 }}>
+        <InputField label="Full Name" placeholder="Maria Santos" icon="users" />
+        <InputField label="Email" placeholder="maria@example.com" icon="mail" />
+        <InputField label="Home Name" placeholder="Santos Family Care" icon="home" />
+        <InputField label="Password" placeholder="••••••••" icon="lock" />
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+          <div style={{ width: 18, height: 18, borderRadius: 4, border: `2px solid ${T.primary}`, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="check" size={12} color={T.primary} /></div>
+          <span style={{ fontSize: 11, color: T.textSecondary }}>I agree to Terms of Service & HIPAA BAA</span>
+        </div>
+        <Btn>Create Account</Btn>
+        <div style={{ textAlign: "center", fontSize: 12, color: T.textSecondary }}>Already have an account? <span style={{ color: T.primary, fontWeight: 600, cursor: "pointer" }}>Sign In</span></div>
+      </div>
+    </div>
+  );
+  const slides = [
+    { icon: "camera", title: "AI Reads Doctor Orders", desc: "Snap a photo — our AI extracts medications, dosages, and instructions instantly.", bg: `linear-gradient(135deg, ${T.primary}15, ${T.accent}10)` },
+    { icon: "zap", title: "3-Click Med Pass", desc: "The fastest medication administration workflow. Built for caregivers, not IT teams.", bg: `linear-gradient(135deg, ${T.success}12, ${T.primary}08)` },
+    { icon: "shield", title: "Always Inspection Ready", desc: "Real-time compliance scoring. Know your readiness score before DSHS does.", bg: `linear-gradient(135deg, ${T.warning}12, ${T.accent}08)` },
+  ];
+  const s = slides[page];
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column", background: T.card }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px 28px", textAlign: "center" }}>
+        <div style={{ width: 96, height: 96, borderRadius: 28, background: s.bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 28 }}><I name={s.icon} size={40} color={T.primary} /></div>
+        <div style={{ fontSize: 22, fontWeight: 700, color: T.text, marginBottom: 8, lineHeight: 1.2 }}>{s.title}</div>
+        <div style={{ fontSize: 14, color: T.textSecondary, lineHeight: 1.5, maxWidth: 280 }}>{s.desc}</div>
+      </div>
+      <div style={{ padding: "0 24px 20px", display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 8 }}>{slides.map((_, i) => <div key={i} onClick={() => setPage(i)} style={{ width: i === page ? 24 : 8, height: 8, borderRadius: 4, background: i === page ? T.primary : T.borderLight, cursor: "pointer", transition: "all 0.2s" }} />)}</div>
+        <Btn onClick={() => page < 2 ? setPage(page + 1) : setPage(0)}>{page < 2 ? "Next" : "Get Started Free"}</Btn>
+        <div onClick={() => setPage(1)} style={{ padding: 12, textAlign: "center", fontSize: 14, fontWeight: 600, color: T.primary, cursor: "pointer" }}>{page < 2 ? "Skip" : "Sign In"}</div>
+      </div>
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 6: APP STORE
+// ──────────────────────────────────────────
+const AppStoreScreen = () => (
+  <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#fff" }}>
+    <div style={{ padding: "12px 16px", display: "flex", gap: 14, borderBottom: `1px solid ${T.borderLight}` }}>
+      <div style={{ width: 64, height: 64, borderRadius: 14, background: `linear-gradient(135deg, ${T.primary}, ${T.primaryLight})`, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.12)", flexShrink: 0 }}><I name="pill" size={28} color="#fff" /></div>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: T.text }}>CareOS</div>
+        <div style={{ fontSize: 11, color: T.textSecondary }}>AI-Powered eMAR for Care Homes</div>
+        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 4 }}>{[1,2,3,4,5].map(i => <I key={i} name="star" size={12} color={i <= 4 ? "#F5A623" : T.borderLight} sw={0} />)}<span style={{ fontSize: 10, color: T.textMuted, marginLeft: 2 }}>4.8 (127)</span></div>
+      </div>
+      <div style={{ padding: "6px 16px", borderRadius: T.rFull, background: T.primary, color: "#fff", fontSize: 13, fontWeight: 700, alignSelf: "center", cursor: "pointer" }}>GET</div>
+    </div>
+    <div style={{ padding: "12px 16px" }}>
+      <div style={{ display: "flex", gap: 8, overflowX: "auto", paddingBottom: 8 }}>
+        {["3-Click Med Pass", "AI Order Reading", "Inspection Ready"].map((label, i) => (
+          <div key={i} style={{ minWidth: 140, height: 200, borderRadius: 12, background: `linear-gradient(135deg, ${[T.primarySoft, T.accentSoft, T.successSoft][i]}, ${T.card})`, border: `1px solid ${T.borderLight}`, padding: 14, display: "flex", flexDirection: "column", justifyContent: "space-between", flexShrink: 0 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: `${[T.primary, T.accent, T.success][i]}20`, display: "flex", alignItems: "center", justifyContent: "center" }}><I name={["zap", "camera", "shield"][i]} size={16} color={[T.primary, T.accent, T.success][i]} /></div>
+            <div><div style={{ fontSize: 13, fontWeight: 700, color: T.text }}>{label}</div><div style={{ fontSize: 10, color: T.textSecondary, marginTop: 2 }}>{["Fastest med pass workflow.", "AI reads orders with 95%+ accuracy.", "Know your DSHS score anytime."][i]}</div></div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div style={{ padding: "8px 16px" }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: T.text, marginBottom: 6 }}>Ratings & Reviews</div>
+      {[{ name: "Dawit T.", text: "Finally a system built for small homes. My 3 AFHs run smoother than ever." },{ name: "Maria S.", text: "So simple. My caregivers learned in 5 minutes." }].map((r, i) => (
+        <div key={i} style={{ padding: "8px 0", borderBottom: i === 0 ? `1px solid ${T.borderLight}` : "none" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}><span style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{r.name}</span><div style={{ display: "flex", gap: 1 }}>{[1,2,3,4,5].map(s => <I key={s} name="star" size={10} color="#F5A623" sw={0} />)}</div></div>
+          <div style={{ fontSize: 12, color: T.textSecondary, lineHeight: 1.4 }}>{r.text}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// ──────────────────────────────────────────
+// SCREEN 7: NOTIFICATIONS PANEL
+// ──────────────────────────────────────────
+const NotificationsScreen = () => {
+  const [filter, setFilter] = useState("all");
+  const notifs = [
+    { type: "danger", icon: "alert", title: "Medication Overdue", desc: "Helen W. — 8:00 AM meds not administered", time: "12 min ago", read: false },
+    { type: "warning", icon: "clock", title: "Doctor Order Pending", desc: "New order for Dorothy M. needs review", time: "28 min ago", read: false },
+    { type: "primary", icon: "checkCircle", title: "Med Pass Completed", desc: "George A. — all 3 medications confirmed by Maria", time: "45 min ago", read: true },
+    { type: "danger", icon: "shield", title: "Credential Expiring", desc: "Maria R. CPR/First Aid cert expires in 12 days", time: "2 hrs ago", read: false },
+    { type: "primary", icon: "users", title: "Shift Change", desc: "Fatuma A. clocked in for PM shift", time: "3 hrs ago", read: true },
+    { type: "warning", icon: "package", title: "Medication Delivery", desc: "Pharmacy delivery expected today 2-4 PM", time: "5 hrs ago", read: true },
+    { type: "primary", icon: "file", title: "Document Updated", desc: "Fire drill log updated by Dawit T.", time: "Yesterday", read: true },
+    { type: "success", icon: "shield", title: "Inspection Score Updated", desc: "Readiness score improved to 87% (+3)", time: "Yesterday", read: true },
+  ];
+  const filtered = filter === "all" ? notifs : notifs.filter(n => !n.read);
+  const colors = { danger: T.danger, warning: T.warning, primary: T.primary, success: T.success };
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "10px 16px", background: T.card, borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+          <div style={{ fontSize: 20, fontWeight: 700, color: T.text }}>Notifications</div>
+          <Badge text="3 new" color={T.danger} bg={T.dangerSoft} small />
+        </div>
+        <div style={{ display: "flex", gap: 6 }}>
+          {["all", "unread"].map(f => (
+            <div key={f} onClick={() => setFilter(f)} style={{ padding: "5px 14px", borderRadius: T.rFull, background: filter === f ? T.primary : T.bg, color: filter === f ? "#fff" : T.textSecondary, fontSize: 12, fontWeight: 600, cursor: "pointer", textTransform: "capitalize" }}>{f}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px" }}>
+        {filtered.map((n, i) => (
+          <div key={i} style={{ display: "flex", gap: 11, padding: "12px 0", borderBottom: `1px solid ${T.borderLight}`, opacity: n.read ? 0.65 : 1 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: `${colors[n.type]}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <I name={n.icon} size={17} color={colors[n.type]} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{n.title}</div>
+                {!n.read && <div style={{ width: 8, height: 8, borderRadius: "50%", background: T.primary, flexShrink: 0, marginTop: 4 }} />}
+              </div>
+              <div style={{ fontSize: 12, color: T.textSecondary, marginTop: 1 }}>{n.desc}</div>
+              <div style={{ fontSize: 10, color: T.textMuted, marginTop: 3 }}>{n.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <BottomNav active="alerts" />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 8: SETTINGS
+// ──────────────────────────────────────────
+const SettingsScreen = () => {
+  const sections = [
+    { title: "Account", items: [
+      { icon: "users", label: "Profile", desc: "Name, email, photo" },
+      { icon: "home", label: "Home Settings", desc: "Santos Family Care" },
+      { icon: "lock", label: "Security", desc: "Password, PIN, biometrics" },
+    ]},
+    { title: "Preferences", items: [
+      { icon: "bell", label: "Notifications", desc: "Push, email, SMS alerts", toggle: true },
+      { icon: "moon", label: "Dark Mode", desc: "Reduce eye strain at night", toggle: false },
+      { icon: "globe", label: "Language", desc: "English" },
+    ]},
+    { title: "Compliance", items: [
+      { icon: "shield", label: "HIPAA Settings", desc: "Auto-lock, session timeout" },
+      { icon: "eye", label: "Audit Log", desc: "View all activity" },
+      { icon: "fileText", label: "Data Export", desc: "Download records" },
+    ]},
+    { title: "Support", items: [
+      { icon: "helpCircle", label: "Help Center", desc: "FAQs and guides" },
+      { icon: "mail", label: "Contact Support", desc: "Chat or email us" },
+      { icon: "logOut", label: "Sign Out", desc: "", danger: true },
+    ]},
+  ];
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="Settings" onBack={() => {}} />
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px 16px" }}>
+        {sections.map((s, si) => (
+          <div key={si} style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: T.textMuted, textTransform: "uppercase", letterSpacing: 0.5, padding: "8px 4px 6px" }}>{s.title}</div>
+            <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, overflow: "hidden" }}>
+              {s.items.map((item, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: "12px 14px", borderBottom: i < s.items.length - 1 ? `1px solid ${T.borderLight}` : "none", cursor: "pointer" }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 9, background: item.danger ? T.dangerSoft : T.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <I name={item.icon} size={17} color={item.danger ? T.danger : T.textSecondary} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: item.danger ? T.danger : T.text }}>{item.label}</div>
+                    {item.desc && <div style={{ fontSize: 11, color: T.textMuted }}>{item.desc}</div>}
+                  </div>
+                  {item.toggle !== undefined ? (
+                    <I name={item.toggle ? "toggleRight" : "toggleLeft"} size={28} color={item.toggle ? T.primary : T.textMuted} />
+                  ) : !item.danger && <I name="chevron" size={16} color={T.textMuted} />}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div style={{ textAlign: "center", fontSize: 10, color: T.textMuted, padding: "8px 0" }}>CareOS v1.0.0 · HIPAA Compliant</div>
+      </div>
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 9: USER PROFILE
+// ──────────────────────────────────────────
+const ProfileScreen = () => (
+  <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+    <Header title="Profile" onBack={() => {}} />
+    <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 0 20px" }}>
+        <div style={{ width: 72, height: 72, borderRadius: 22, background: `linear-gradient(135deg, ${T.primary}, ${T.primaryLight})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 10 }}>MS</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>Maria Santos</div>
+        <div style={{ fontSize: 13, color: T.textSecondary }}>Owner · Santos Family Care</div>
+        <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+          <Badge text="HCA Certified" color={T.success} bg={T.successSoft} />
+          <Badge text="Admin" color={T.primary} bg={T.primarySoft} />
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8, marginBottom: 16 }}>
+        {[{ label: "Residents", value: "6" },{ label: "Staff", value: "3" },{ label: "Med Passes", value: "1,247" }].map((s, i) => (
+          <div key={i} style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 12, textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 700, color: T.primary }}>{s.value}</div>
+            <div style={{ fontSize: 10, color: T.textMuted }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, overflow: "hidden" }}>
+        {[{ icon: "mail", label: "Email", value: "maria@santosfamilycare.com" },{ icon: "phone", label: "Phone", value: "(253) 555-0147" },{ icon: "home", label: "Home", value: "Santos Family Care, Federal Way" },{ icon: "shield", label: "License #", value: "AFH-2017-34892" },{ icon: "calendar", label: "Member Since", value: "February 2026" }].map((item, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: "11px 14px", borderBottom: i < 4 ? `1px solid ${T.borderLight}` : "none" }}>
+            <I name={item.icon} size={16} color={T.textMuted} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 10, color: T.textMuted }}>{item.label}</div>
+              <div style={{ fontSize: 13, fontWeight: 500, color: T.text }}>{item.value}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 12 }}><Btn secondary small>Edit Profile</Btn></div>
+    </div>
+  </div>
+);
+
+// ──────────────────────────────────────────
+// SCREEN 10: RESIDENT PROFILE & CARE PLAN
+// ──────────────────────────────────────────
+const ResidentProfileScreen = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="Dorothy Mitchell" subtitle="Room 2 · Admitted Jan 15, 2025" onBack={() => {}} />
+      <div style={{ flex: 1, overflowY: "auto" }}>
+        {/* Resident header card */}
+        <div style={{ padding: "12px 16px", background: T.card, borderBottom: `1px solid ${T.border}` }}>
+          <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 16, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: T.primary }}>DM</div>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", gap: 6, marginBottom: 4 }}>
+                <Badge text="Private Pay" color={T.success} bg={T.successSoft} small />
+                <Badge text="Full Code" color={T.primary} bg={T.primarySoft} small />
+              </div>
+              <div style={{ fontSize: 12, color: T.textSecondary }}>Age 82 · Female · DOB: 03/14/1943</div>
+              <div style={{ fontSize: 12, color: T.danger, fontWeight: 600, marginTop: 2 }}>⚠ Allergies: Penicillin, Sulfa</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 4 }}>
+            {["overview", "meds", "care plan", "vitals", "notes"].map(t => (
+              <div key={t} onClick={() => setActiveTab(t)} style={{ padding: "6px 10px", borderRadius: T.rFull, background: activeTab === t ? T.primary : T.bg, color: activeTab === t ? "#fff" : T.textSecondary, fontSize: 11, fontWeight: 600, cursor: "pointer", textTransform: "capitalize" }}>{t}</div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ padding: 16 }}>
+          {activeTab === "overview" && (<>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+              {[{ label: "Primary Doctor", value: "Dr. Sarah Chen", icon: "users" },{ label: "Pharmacy", value: "Bartell Drugs, Kent", icon: "package" },{ label: "Emergency Contact", value: "Lisa M. (Daughter)", icon: "phone" },{ label: "Insurance", value: "Medicare + Supplement", icon: "shield" }].map((c, i) => (
+                <div key={i} style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 11 }}>
+                  <I name={c.icon} size={14} color={T.textMuted} />
+                  <div style={{ fontSize: 10, color: T.textMuted, marginTop: 4 }}>{c.label}</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{c.value}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 14, marginBottom: 10 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: T.text, marginBottom: 8 }}>Diagnoses</div>
+              {["Hypertension (I10)", "Type 2 Diabetes (E11.9)", "GERD (K21.0)", "Mild Cognitive Impairment (G31.84)"].map((d, i) => (
+                <div key={i} style={{ fontSize: 12, color: T.textSecondary, padding: "3px 0", display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ width: 4, height: 4, borderRadius: "50%", background: T.primary }} />{d}
+                </div>
+              ))}
+            </div>
+            <div style={{ background: T.warningSoft, borderRadius: T.r, padding: 12, border: `1px solid ${T.warning}22` }}>
+              <div style={{ fontSize: 12, fontWeight: 600, color: T.warning }}>Upcoming: Care Plan Review due Mar 1</div>
+            </div>
+          </>)}
+
+          {activeTab === "meds" && (<>
+            {[
+              { name: "Lisinopril", dose: "10mg PO Daily", time: "8:00 AM", status: "active", color: "#4A90D9" },
+              { name: "Metformin", dose: "500mg PO BID", time: "8:00 AM, 6:00 PM", status: "active", color: "#D4890B" },
+              { name: "Amlodipine", dose: "5mg PO Daily", time: "8:00 AM", status: "active", color: "#2D9E6E" },
+              { name: "Omeprazole", dose: "20mg PO Daily", time: "7:30 AM (before food)", status: "active", color: "#8B5CF6" },
+              { name: "Tylenol (PRN)", dose: "650mg PO Q6H", time: "As needed for pain", status: "prn", color: "#888" },
+            ].map((m, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 11, padding: "11px 13px", marginBottom: 6, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+                <div style={{ width: 5, height: 32, borderRadius: 3, background: m.color }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{m.name}</div>
+                  <div style={{ fontSize: 11, color: T.textSecondary }}>{m.dose}</div>
+                  <div style={{ fontSize: 10, color: T.textMuted }}>{m.time}</div>
+                </div>
+                <Badge text={m.status === "prn" ? "PRN" : "Active"} color={m.status === "prn" ? T.warning : T.success} bg={m.status === "prn" ? T.warningSoft : T.successSoft} small />
+              </div>
+            ))}
+          </>)}
+
+          {activeTab === "care plan" && (<>
+            {[
+              { area: "Medication Management", goal: "Self-remind AM medications with staff assistance", freq: "Daily", s: "good" },
+              { area: "Mobility & Fall Prevention", goal: "Independent ambulation with standby assist for stairs", freq: "Daily", s: "good" },
+              { area: "Nutrition", goal: "Diabetic diet, monitor blood sugar before meals", freq: "3x daily", s: "warn" },
+              { area: "Cognitive Support", goal: "Orientation prompts, structured daily routine", freq: "Daily", s: "good" },
+              { area: "Social Engagement", goal: "Participate in 1+ group activity per day", freq: "Daily", s: "warn" },
+            ].map((c, i) => {
+              const sc = c.s === "warn" ? T.warning : T.success;
+              return (
+                <div key={i} style={{ padding: 13, marginBottom: 6, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{c.area}</div>
+                    <Badge text={c.s === "warn" ? "Review" : "On Track"} color={sc} bg={`${sc}18`} small />
+                  </div>
+                  <div style={{ fontSize: 12, color: T.textSecondary }}>{c.goal}</div>
+                  <div style={{ fontSize: 10, color: T.textMuted, marginTop: 2 }}>Frequency: {c.freq}</div>
+                </div>
+              );
+            })}
+          </>)}
+
+          {activeTab === "vitals" && (<>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+              {[{ label: "Blood Pressure", value: "138/82", unit: "mmHg", icon: "activity", trend: "↓", c: T.success },{ label: "Blood Sugar", value: "142", unit: "mg/dL", icon: "droplet", trend: "↑", c: T.warning },{ label: "Weight", value: "156", unit: "lbs", icon: "users", trend: "—", c: T.textMuted },{ label: "Temperature", value: "98.4", unit: "°F", icon: "thermometer", trend: "—", c: T.textMuted }].map((v, i) => (
+                <div key={i} style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 12 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <I name={v.icon} size={14} color={T.textMuted} />
+                    <span style={{ fontSize: 12, fontWeight: 600, color: v.c }}>{v.trend}</span>
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: T.text, marginTop: 4 }}>{v.value}<span style={{ fontSize: 11, color: T.textMuted, fontWeight: 400 }}> {v.unit}</span></div>
+                  <div style={{ fontSize: 10, color: T.textMuted }}>{v.label}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: 10, color: T.textMuted, textAlign: "center" }}>Last recorded: Today 8:15 AM by Maria</div>
+          </>)}
+
+          {activeTab === "notes" && (<>
+            {[
+              { date: "Feb 25, 8:03 AM", author: "Maria S.", text: "Morning med pass completed. All meds administered. Resident in good spirits, ate full breakfast." },
+              { date: "Feb 24, 6:30 PM", author: "Fatuma A.", text: "Evening meds given. Resident complained of mild heartburn — offered Tums (OTC approved). Resolved within 30 min." },
+              { date: "Feb 24, 2:00 PM", author: "Maria S.", text: "Blood sugar 158 before lunch (slightly elevated). Will monitor at dinner. No PRN insulin needed per current orders." },
+            ].map((n, i) => (
+              <div key={i} style={{ padding: 13, marginBottom: 6, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{n.author}</span>
+                  <span style={{ fontSize: 10, color: T.textMuted }}>{n.date}</span>
+                </div>
+                <div style={{ fontSize: 12, color: T.textSecondary, lineHeight: 1.5 }}>{n.text}</div>
+              </div>
+            ))}
+            <Btn small secondary>+ Add Note</Btn>
+          </>)}
+        </div>
+      </div>
+      <BottomNav active="residents" />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 11: ADD NEW RESIDENT
+// ──────────────────────────────────────────
+const AddResidentScreen = () => {
+  const [step, setStep] = useState(0);
+  const steps = ["Basic Info", "Medical", "Contacts", "Review"];
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="Add New Resident" subtitle={`Step ${step + 1} of 4`} onBack={() => step > 0 && setStep(step - 1)} />
+      <div style={{ padding: "12px 16px 0", background: T.card, borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ display: "flex", gap: 4, marginBottom: 8 }}>
+          {steps.map((s, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center" }}>
+              <div style={{ height: 4, borderRadius: 2, background: i <= step ? T.primary : T.borderLight, marginBottom: 4 }} />
+              <div style={{ fontSize: 9, fontWeight: 600, color: i <= step ? T.primary : T.textMuted }}>{s}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+        {step === 0 && (<>
+          <InputField label="First Name" placeholder="Enter first name" icon="users" />
+          <InputField label="Last Name" placeholder="Enter last name" icon="users" />
+          <InputField label="Date of Birth" placeholder="MM/DD/YYYY" icon="calendar" />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: T.textSecondary, marginBottom: 4 }}>Gender</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {["Male", "Female", "Other"].map(g => (
+                <div key={g} style={{ flex: 1, padding: "10px", borderRadius: T.r, border: `1.5px solid ${g === "Female" ? T.primary : T.border}`, background: g === "Female" ? T.primarySoft : T.bg, textAlign: "center", fontSize: 13, fontWeight: 600, color: g === "Female" ? T.primary : T.textSecondary, cursor: "pointer" }}>{g}</div>
+              ))}
+            </div>
+          </div>
+          <InputField label="Room / Bed Assignment" placeholder="Room 3" icon="home" />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: T.textSecondary, marginBottom: 4 }}>Payment Type</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {["Private Pay", "Medicaid"].map(p => (
+                <div key={p} style={{ flex: 1, padding: "10px", borderRadius: T.r, border: `1.5px solid ${p === "Private Pay" ? T.primary : T.border}`, background: p === "Private Pay" ? T.primarySoft : T.bg, textAlign: "center", fontSize: 13, fontWeight: 600, color: p === "Private Pay" ? T.primary : T.textSecondary, cursor: "pointer" }}>{p}</div>
+              ))}
+            </div>
+          </div>
+        </>)}
+        {step === 1 && (<>
+          <InputField label="Primary Physician" placeholder="Dr. Sarah Chen" icon="users" />
+          <InputField label="Pharmacy" placeholder="Bartell Drugs, Kent" icon="package" />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: T.textSecondary, marginBottom: 4 }}>Allergies</div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", padding: "10px 13px", borderRadius: T.r, border: `1.5px solid ${T.border}`, background: T.bg, minHeight: 44 }}>
+              {["Penicillin", "Sulfa"].map(a => (
+                <div key={a} style={{ display: "flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: T.rFull, background: T.dangerSoft, border: `1px solid ${T.danger}33` }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: T.danger }}>{a}</span>
+                  <I name="x" size={12} color={T.danger} />
+                </div>
+              ))}
+            </div>
+          </div>
+          <InputField label="Diagnoses" placeholder="Search ICD-10 codes..." icon="search" />
+          <div>
+            <div style={{ fontSize: 12, fontWeight: 600, color: T.textSecondary, marginBottom: 4 }}>Code Status</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {["Full Code", "DNR", "POLST"].map(c => (
+                <div key={c} style={{ flex: 1, padding: "10px", borderRadius: T.r, border: `1.5px solid ${c === "Full Code" ? T.primary : T.border}`, background: c === "Full Code" ? T.primarySoft : T.bg, textAlign: "center", fontSize: 12, fontWeight: 600, color: c === "Full Code" ? T.primary : T.textSecondary, cursor: "pointer" }}>{c}</div>
+              ))}
+            </div>
+          </div>
+          <div style={{ padding: 12, background: T.primarySoft, borderRadius: T.r, border: `1px solid ${T.primary}22`, display: "flex", alignItems: "center", gap: 10 }}>
+            <I name="camera" size={20} color={T.primary} />
+            <div><div style={{ fontSize: 12, fontWeight: 600, color: T.primary }}>Upload Doctor's Orders</div><div style={{ fontSize: 10, color: T.textSecondary }}>AI will extract medication details</div></div>
+          </div>
+        </>)}
+        {step === 2 && (<>
+          <div style={{ fontSize: 13, fontWeight: 700, color: T.text, marginBottom: -4 }}>Emergency Contact 1</div>
+          <InputField label="Name" placeholder="Lisa Mitchell" icon="users" />
+          <InputField label="Relationship" placeholder="Daughter" icon="heart" />
+          <InputField label="Phone" placeholder="(253) 555-0198" icon="phone" />
+          <InputField label="Email" placeholder="lisa.mitchell@email.com" icon="mail" />
+          <div style={{ padding: 10, background: T.bg, borderRadius: T.r, border: `1px dashed ${T.border}`, textAlign: "center", cursor: "pointer" }}>
+            <I name="plus" size={16} color={T.primary} />
+            <div style={{ fontSize: 12, fontWeight: 600, color: T.primary, marginTop: 2 }}>Add Emergency Contact 2</div>
+          </div>
+        </>)}
+        {step === 3 && (<>
+          <div style={{ padding: 14, background: T.successSoft, borderRadius: T.r, border: `1px solid ${T.success}33`, display: "flex", alignItems: "center", gap: 8 }}>
+            <I name="checkCircle" size={16} color={T.success} />
+            <span style={{ fontSize: 13, fontWeight: 600, color: T.success }}>Ready to Add Resident</span>
+          </div>
+          {[{ l: "Name", v: "Dorothy Mitchell" },{ l: "DOB", v: "03/14/1943 (Age 82)" },{ l: "Room", v: "Room 3" },{ l: "Payment", v: "Private Pay" },{ l: "Doctor", v: "Dr. Sarah Chen" },{ l: "Pharmacy", v: "Bartell Drugs, Kent" },{ l: "Allergies", v: "Penicillin, Sulfa" },{ l: "Code Status", v: "Full Code" },{ l: "Emergency", v: "Lisa Mitchell (Daughter)" }].map((r, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: `1px solid ${T.borderLight}` }}>
+              <span style={{ fontSize: 12, color: T.textMuted }}>{r.l}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{r.v}</span>
+            </div>
+          ))}
+        </>)}
+        <Btn onClick={() => step < 3 ? setStep(step + 1) : setStep(0)}>
+          {step < 3 ? "Continue" : "Add Resident ✓"}
+        </Btn>
+      </div>
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 12: STAFF SCHEDULING / SHIFTS
+// ──────────────────────────────────────────
+const StaffScheduleScreen = () => {
+  const days = ["Mon 24", "Tue 25", "Wed 26", "Thu 27", "Fri 28", "Sat 1", "Sun 2"];
+  const staff = [
+    { name: "Maria S.", role: "Owner/Caregiver", avatar: "MS", schedule: [
+      { shift: "AM", time: "6A-2P" }, { shift: "AM", time: "6A-2P" }, { shift: "AM", time: "6A-2P" }, { shift: "OFF" }, { shift: "AM", time: "6A-2P" }, { shift: "AM", time: "6A-2P" }, { shift: "OFF" }
+    ]},
+    { name: "Fatuma A.", role: "Caregiver", avatar: "FA", schedule: [
+      { shift: "PM", time: "2P-10P" }, { shift: "PM", time: "2P-10P" }, { shift: "OFF" }, { shift: "PM", time: "2P-10P" }, { shift: "PM", time: "2P-10P" }, { shift: "OFF" }, { shift: "PM", time: "2P-10P" }
+    ]},
+    { name: "James T.", role: "Night Caregiver", avatar: "JT", schedule: [
+      { shift: "NOC", time: "10P-6A" }, { shift: "NOC", time: "10P-6A" }, { shift: "NOC", time: "10P-6A" }, { shift: "NOC", time: "10P-6A" }, { shift: "OFF" }, { shift: "OFF" }, { shift: "NOC", time: "10P-6A" }
+    ]},
+  ];
+  const shiftColors = { AM: { bg: T.primarySoft, c: T.primary }, PM: { bg: T.accentSoft, c: T.accent }, NOC: { bg: "#EDE9FE", c: "#7C3AED" }, OFF: { bg: T.borderLight, c: T.textMuted } };
+
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <div style={{ padding: "10px 16px", background: T.card, borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+          <div><div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>Staff Schedule</div><div style={{ fontSize: 11, color: T.textSecondary }}>Week of Feb 24 – Mar 2</div></div>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="plus" size={16} color={T.primary} /></div>
+        </div>
+        {/* Day headers */}
+        <div style={{ display: "flex", gap: 3 }}>
+          <div style={{ width: 68, flexShrink: 0 }} />
+          {days.map((d, i) => (
+            <div key={i} style={{ flex: 1, textAlign: "center", fontSize: 9, fontWeight: 600, color: d.includes("25") ? T.primary : T.textMuted, padding: 3, borderRadius: 4, background: d.includes("25") ? T.primarySoft : "transparent" }}>{d}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "8px 16px" }}>
+        {staff.map((s, si) => (
+          <div key={si} style={{ marginBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ width: 28, height: 28, borderRadius: 8, background: T.primarySoft, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 700, color: T.primary }}>{s.avatar}</div>
+              <div><div style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{s.name}</div><div style={{ fontSize: 9, color: T.textMuted }}>{s.role}</div></div>
+            </div>
+            <div style={{ display: "flex", gap: 3, marginLeft: 36 }}>
+              {s.schedule.map((sh, i) => {
+                const sc = shiftColors[sh.shift];
+                return (
+                  <div key={i} style={{ flex: 1, padding: "6px 2px", borderRadius: 6, background: sc.bg, textAlign: "center", cursor: "pointer" }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: sc.c }}>{sh.shift}</div>
+                    {sh.time && <div style={{ fontSize: 8, color: sc.c, opacity: 0.7 }}>{sh.time}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {/* Coverage summary */}
+        <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 12, marginTop: 12 }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: T.text, marginBottom: 8 }}>Today's Coverage</div>
+          {[{ shift: "AM (6A-2P)", staff: "Maria S.", status: "Active now" },{ shift: "PM (2P-10P)", staff: "Fatuma A.", status: "Starts in 4h" },{ shift: "NOC (10P-6A)", staff: "James T.", status: "Tonight" }].map((c, i) => (
+            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 0", borderBottom: i < 2 ? `1px solid ${T.borderLight}` : "none" }}>
+              <div><div style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{c.shift}</div><div style={{ fontSize: 10, color: T.textMuted }}>{c.staff}</div></div>
+              <Badge text={c.status} color={i === 0 ? T.success : T.textMuted} bg={i === 0 ? T.successSoft : T.borderLight} small />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ background: T.warningSoft, borderRadius: T.r, padding: 12, marginTop: 8, border: `1px solid ${T.warning}22` }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <I name="alert" size={14} color={T.warning} />
+            <span style={{ fontSize: 12, fontWeight: 600, color: T.warning }}>Saturday PM shift uncovered</span>
+          </div>
+          <div style={{ fontSize: 11, color: T.textSecondary, marginTop: 2, marginLeft: 20 }}>Fatuma is off — assign coverage or pick up shift</div>
+        </div>
+      </div>
+      <BottomNav />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// SCREEN 13: MEDICATION RECEIPT & VERIFICATION
+// ──────────────────────────────────────────
+const MedReceiptScreen = () => {
+  const [step, setStep] = useState("pending");
+  const pending = [
+    { name: "Metoprolol Succinate ER", dose: "50mg", qty: "30 tablets", ordered: "Feb 23", prescriber: "Dr. Chen", status: "pending" },
+    { name: "Amlodipine", dose: "10mg", qty: "30 tablets", ordered: "Feb 20", prescriber: "Dr. Chen", status: "pending" },
+  ];
+  const received = [
+    { name: "Lisinopril", dose: "10mg", qty: "30 tablets", received: "Feb 24", match: true },
+    { name: "Metformin", dose: "500mg", qty: "60 tablets", received: "Feb 24", match: true },
+    { name: "Omeprazole", dose: "20mg", qty: "30 capsules", received: "Feb 22", match: false, issue: "Label says 40mg — order says 20mg" },
+  ];
+
+  return (
+    <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Header title="Medication Inventory" subtitle="Receipt & verification" onBack={() => {}} />
+      <div style={{ padding: "8px 16px 0", background: T.card, borderBottom: `1px solid ${T.border}` }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {["pending", "received", "inventory"].map(t => (
+            <div key={t} onClick={() => setStep(t)} style={{ flex: 1, padding: "8px", borderRadius: "8px 8px 0 0", background: step === t ? T.bg : "transparent", textAlign: "center", fontSize: 12, fontWeight: 600, color: step === t ? T.primary : T.textMuted, cursor: "pointer", textTransform: "capitalize", borderBottom: step === t ? `2px solid ${T.primary}` : "2px solid transparent" }}>{t === "pending" ? `Pending (${pending.length})` : t}</div>
+          ))}
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: 16 }}>
+        {step === "pending" && (<>
+          <div style={{ padding: 12, background: T.warningSoft, borderRadius: T.r, border: `1px solid ${T.warning}22`, marginBottom: 12, display: "flex", alignItems: "center", gap: 8 }}>
+            <I name="truck" size={16} color={T.warning} />
+            <span style={{ fontSize: 12, fontWeight: 600, color: T.warning }}>2 medications awaiting delivery</span>
+          </div>
+          {pending.map((m, i) => (
+            <div key={i} style={{ padding: 13, marginBottom: 8, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{m.name}</div>
+                <Badge text="Awaiting" color={T.warning} bg={T.warningSoft} small />
+              </div>
+              <div style={{ fontSize: 12, color: T.textSecondary }}>{m.dose} · {m.qty}</div>
+              <div style={{ fontSize: 10, color: T.textMuted, marginTop: 2 }}>Ordered {m.ordered} · {m.prescriber}</div>
+              <div onClick={() => {}} style={{ marginTop: 10, padding: "10px", borderRadius: T.r, background: T.primarySoft, border: `1px solid ${T.primary}22`, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, cursor: "pointer" }}>
+                <I name="camera" size={16} color={T.primary} />
+                <span style={{ fontSize: 13, fontWeight: 600, color: T.primary }}>Scan Received Package</span>
+              </div>
+            </div>
+          ))}
+        </>)}
+
+        {step === "received" && (<>
+          {received.map((m, i) => (
+            <div key={i} style={{ padding: 13, marginBottom: 8, background: T.card, borderRadius: T.r, border: `1.5px solid ${m.match ? T.border : T.danger}` }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: T.text }}>{m.name}</div>
+                <Badge text={m.match ? "Verified ✓" : "Discrepancy ⚠"} color={m.match ? T.success : T.danger} bg={m.match ? T.successSoft : T.dangerSoft} small />
+              </div>
+              <div style={{ fontSize: 12, color: T.textSecondary }}>{m.dose} · {m.qty}</div>
+              <div style={{ fontSize: 10, color: T.textMuted, marginTop: 2 }}>Received {m.received}</div>
+              {!m.match && (
+                <div style={{ marginTop: 8, padding: "8px 10px", background: T.dangerSoft, borderRadius: 8, border: `1px solid ${T.danger}22` }}>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: T.danger }}>⚠ {m.issue}</div>
+                  <div style={{ fontSize: 10, color: T.textSecondary, marginTop: 2 }}>Contact pharmacy to resolve before activating</div>
+                  <div style={{ display: "flex", gap: 6, marginTop: 8 }}>
+                    <div style={{ flex: 1, padding: "7px", borderRadius: 6, background: T.card, border: `1px solid ${T.border}`, textAlign: "center", fontSize: 11, fontWeight: 600, color: T.textSecondary, cursor: "pointer" }}>Call Pharmacy</div>
+                    <div style={{ flex: 1, padding: "7px", borderRadius: 6, background: T.danger, textAlign: "center", fontSize: 11, fontWeight: 600, color: "#fff", cursor: "pointer" }}>Flag for Review</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </>)}
+
+        {step === "inventory" && (<>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
+            <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 12, textAlign: "center" }}>
+              <div style={{ fontSize: 22, fontWeight: 700, color: T.primary }}>23</div>
+              <div style={{ fontSize: 10, color: T.textMuted }}>Active Medications</div>
+            </div>
+            <div style={{ background: T.card, borderRadius: T.r, border: `1px solid ${T.border}`, padding: 12, textAlign: "center" }}>
+              <div style={{ fontSize: 22, fontWeight: 700, color: T.warning }}>3</div>
+              <div style={{ fontSize: 10, color: T.textMuted }}>Refills Due Soon</div>
+            </div>
+          </div>
+          {[
+            { name: "Lisinopril 10mg", resident: "Dorothy M.", remaining: 24, total: 30, s: "ok" },
+            { name: "Metformin 500mg", resident: "Dorothy M.", remaining: 18, total: 60, s: "ok" },
+            { name: "Amlodipine 5mg", resident: "Robert K.", remaining: 4, total: 30, s: "low" },
+            { name: "Donepezil 10mg", resident: "Helen W.", remaining: 2, total: 30, s: "critical" },
+          ].map((m, i) => {
+            const pct = (m.remaining / m.total) * 100;
+            const sc = m.s === "critical" ? T.danger : m.s === "low" ? T.warning : T.success;
+            return (
+              <div key={i} style={{ padding: 12, marginBottom: 6, background: T.card, borderRadius: T.r, border: `1px solid ${T.border}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{m.name}</div>
+                  <Badge text={m.s === "critical" ? "Reorder!" : m.s === "low" ? "Low" : `${m.remaining} left`} color={sc} bg={`${sc}18`} small />
+                </div>
+                <div style={{ fontSize: 11, color: T.textSecondary }}>{m.resident} · {m.remaining}/{m.total} remaining</div>
+                <div style={{ marginTop: 6, background: T.borderLight, borderRadius: 3, height: 4, overflow: "hidden" }}>
+                  <div style={{ width: `${pct}%`, height: "100%", background: sc, borderRadius: 3 }} />
+                </div>
+              </div>
+            );
+          })}
+        </>)}
+      </div>
+      <BottomNav />
+    </div>
+  );
+};
+
+// ──────────────────────────────────────────
+// MAIN APP
+// ──────────────────────────────────────────
+function App() {
+  const [tab, setTab] = useState("medpass");
+  const tabGroups = [
+    { label: "Core Flows", items: [
+      { id: "medpass", label: "Med Pass", icon: "pill" },
+      { id: "aiorder", label: "AI Orders", icon: "camera" },
+      { id: "medreceipt", label: "Med Receipt", icon: "package" },
+    ]},
+    { label: "Management", items: [
+      { id: "resident", label: "Resident Profile", icon: "users" },
+      { id: "addresident", label: "Add Resident", icon: "userPlus" },
+      { id: "schedule", label: "Staff Schedule", icon: "calendar" },
+    ]},
+    { label: "Dashboard", items: [
+      { id: "dashboard", label: "Owner Dashboard", icon: "layout" },
+      { id: "inspection", label: "Inspection", icon: "shield" },
+    ]},
+    { label: "App", items: [
+      { id: "notifications", label: "Notifications", icon: "bell" },
+      { id: "settings", label: "Settings", icon: "settings" },
+      { id: "profile", label: "Profile", icon: "users" },
+    ]},
+    { label: "Marketing", items: [
+      { id: "onboarding", label: "Onboarding", icon: "logIn" },
+      { id: "appstore", label: "App Store", icon: "download" },
+    ]},
+  ];
+
+  return (
+    <div style={{ fontFamily: T.font, background: "#0D1117", minHeight: "100vh", color: T.text }}>
+      <div style={{ padding: "14px 24px 0", borderBottom: "1px solid #1E2A38" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: `linear-gradient(135deg, ${T.primary}, ${T.accent})`, display: "flex", alignItems: "center", justifyContent: "center" }}><I name="pill" size={16} color="#fff" /></div>
+          <div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: "#fff" }}>CareOS</div>
+            <div style={{ fontSize: 10, color: "#6B7B8D" }}>Design Mockups v2 — 13 Screens</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 12, overflowX: "auto", paddingBottom: 0 }}>
+          {tabGroups.map((g, gi) => (
+            <div key={gi} style={{ display: "flex", gap: 1 }}>
+              {gi > 0 && <div style={{ width: 1, background: "#2A3545", margin: "6px 4px", alignSelf: "stretch" }} />}
+              {g.items.map(t => (
+                <div key={t.id} onClick={() => setTab(t.id)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "8px 11px", borderRadius: "8px 8px 0 0", background: tab === t.id ? T.bg : "transparent", cursor: "pointer", whiteSpace: "nowrap" }}>
+                  <I name={t.icon} size={13} color={tab === t.id ? T.primary : "#5A6B7D"} />
+                  <span style={{ fontSize: 11, fontWeight: 600, color: tab === t.id ? T.text : "#5A6B7D" }}>{t.label}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ background: T.bg, minHeight: "calc(100vh - 86px)" }}>
+        {tab === "dashboard" ? (
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: 24 }}><OwnerDashboard /></div>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "center", padding: "28px 24px" }}>
+            <Phone>
+              {tab === "medpass" && <MedPassScreen />}
+              {tab === "aiorder" && <AIOrderScreen />}
+              {tab === "inspection" && <InspectionScreen />}
+              {tab === "onboarding" && <OnboardingScreen />}
+              {tab === "appstore" && <AppStoreScreen />}
+              {tab === "notifications" && <NotificationsScreen />}
+              {tab === "settings" && <SettingsScreen />}
+              {tab === "profile" && <ProfileScreen />}
+              {tab === "resident" && <ResidentProfileScreen />}
+              {tab === "addresident" && <AddResidentScreen />}
+              {tab === "schedule" && <StaffScheduleScreen />}
+              {tab === "medreceipt" && <MedReceiptScreen />}
+            </Phone>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+  <script>
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
+</body>
+</html>
