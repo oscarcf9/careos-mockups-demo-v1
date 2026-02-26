@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>CareOS — Design Mockups</title>
   <meta name="description" content="CareOS Interactive Design Mockups — 13 Screens">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CareOS Design">
   <meta name="theme-color" content="#0D1117">
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A6B8A'/%3E%3Crect x='25' y='10' width='50' height='80' rx='10' fill='white' opacity='0.9'/%3E%3Cline x1='25' y1='50' x2='75' y2='50' stroke='%231A6B8A' stroke-width='6'/%3E%3C/svg%3E">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231A6B8A'/%3E%3Crect x='25' y='10' width='50' height='80' rx='10' fill='white' opacity='0.9'/%3E%3Cline x1='25' y1='50' x2='75' y2='50' stroke='%231A6B8A' stroke-width='6'/%3E%3C/svg%3E">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -27,11 +25,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script>
-const {
-  useState,
-  useEffect,
-  useRef
-} = React;
 
 // ─── DESIGN TOKENS ───
 const T = {
@@ -754,8 +747,8 @@ const Btn = ({
 // SCREEN 1: MED PASS FLOW
 // ──────────────────────────────────────────
 const MedPassScreen = () => {
-  const [screen, setScreen] = useState("queue");
-  const [checked, setChecked] = useState({});
+  const [screen, setScreen] = React.useState("queue");
+  const [checked, setChecked] = React.useState({});
   const allChecked = Object.keys(checked).length === 4 && Object.values(checked).every(Boolean);
   const residents = [{
     name: "Dorothy M.",
@@ -1147,8 +1140,8 @@ const MedPassScreen = () => {
 // SCREEN 2: AI ORDER PROCESSING
 // ──────────────────────────────────────────
 const AIOrderScreen = () => {
-  const [step, setStep] = useState(0);
-  useEffect(() => {
+  const [step, setStep] = React.useState(0);
+  React.useEffect(() => {
     if (step === 1) {
       const t = setTimeout(() => setStep(2), 2000);
       return () => clearTimeout(t);
@@ -2004,7 +1997,7 @@ const InspectionScreen = () => /*#__PURE__*/React.createElement("div", {
 // SCREEN 5: ONBOARDING & SIGNUP
 // ──────────────────────────────────────────
 const OnboardingScreen = () => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = React.useState(0);
   if (page === 1) return /*#__PURE__*/React.createElement("div", {
     style: {
       flex: 1,
@@ -2411,7 +2404,7 @@ const AppStoreScreen = () => /*#__PURE__*/React.createElement("div", {
 // SCREEN 7: NOTIFICATIONS PANEL
 // ──────────────────────────────────────────
 const NotificationsScreen = () => {
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = React.useState("all");
   const notifs = [{
     type: "danger",
     icon: "alert",
@@ -2925,7 +2918,7 @@ const ProfileScreen = () => /*#__PURE__*/React.createElement("div", {
 // SCREEN 10: RESIDENT PROFILE & CARE PLAN
 // ──────────────────────────────────────────
 const ResidentProfileScreen = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = React.useState("overview");
   return /*#__PURE__*/React.createElement("div", {
     style: {
       flex: 1,
@@ -3390,7 +3383,7 @@ const ResidentProfileScreen = () => {
 // SCREEN 11: ADD NEW RESIDENT
 // ──────────────────────────────────────────
 const AddResidentScreen = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = React.useState(0);
   const steps = ["Basic Info", "Medical", "Contacts", "Review"];
   return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -4051,7 +4044,7 @@ const StaffScheduleScreen = () => {
 // SCREEN 13: MEDICATION RECEIPT & VERIFICATION
 // ──────────────────────────────────────────
 const MedReceiptScreen = () => {
-  const [step, setStep] = useState("pending");
+  const [step, setStep] = React.useState("pending");
   const pending = [{
     name: "Metoprolol Succinate ER",
     dose: "50mg",
@@ -4426,7 +4419,7 @@ const MedReceiptScreen = () => {
 // MAIN APP
 // ──────────────────────────────────────────
 function App() {
-  const [tab, setTab] = useState("medpass");
+  const [tab, setTab] = React.useState("medpass");
   const tabGroups = [{
     label: "Core Flows",
     items: [{
@@ -4602,13 +4595,8 @@ function App() {
   }, /*#__PURE__*/React.createElement(Phone, null, tab === "medpass" && /*#__PURE__*/React.createElement(MedPassScreen, null), tab === "aiorder" && /*#__PURE__*/React.createElement(AIOrderScreen, null), tab === "inspection" && /*#__PURE__*/React.createElement(InspectionScreen, null), tab === "onboarding" && /*#__PURE__*/React.createElement(OnboardingScreen, null), tab === "appstore" && /*#__PURE__*/React.createElement(AppStoreScreen, null), tab === "notifications" && /*#__PURE__*/React.createElement(NotificationsScreen, null), tab === "settings" && /*#__PURE__*/React.createElement(SettingsScreen, null), tab === "profile" && /*#__PURE__*/React.createElement(ProfileScreen, null), tab === "resident" && /*#__PURE__*/React.createElement(ResidentProfileScreen, null), tab === "addresident" && /*#__PURE__*/React.createElement(AddResidentScreen, null), tab === "schedule" && /*#__PURE__*/React.createElement(StaffScheduleScreen, null), tab === "medreceipt" && /*#__PURE__*/React.createElement(MedReceiptScreen, null)))));
 }
 
-    const root = ReactDOM.createRoot(document.getElementById('root'));
+    var root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(React.createElement(App));
-  </script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js').catch(() => {});
-    }
   </script>
 </body>
 </html>
