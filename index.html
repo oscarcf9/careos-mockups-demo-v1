@@ -19,6 +19,7 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #E2E6EC; border-radius: 4px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -26,7 +27,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
-  <script type="text/babel">
+  <script type="text/babel" data-type="module">
+    const { useState, useEffect, useRef } = React;
 
 // ─── DESIGN TOKENS ───
 const T = {
@@ -262,6 +264,12 @@ const MedPassScreen = () => {
 // ──────────────────────────────────────────
 const AIOrderScreen = () => {
   const [step, setStep] = useState(0);
+  useEffect(() => {
+    if (step === 1) {
+      const timer = setTimeout(() => setStep(2), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [step]);
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
       <Header title="New Doctor Order" subtitle="Scan or photograph the order" />
@@ -282,8 +290,8 @@ const AIOrderScreen = () => {
             <div style={{ width: 56, height: 56, borderRadius: "50%", border: `3px solid ${T.primary}`, borderTopColor: "transparent", animation: "spin 1s linear infinite" }} />
             <div style={{ fontSize: 15, fontWeight: 600, color: T.text }}>Reading Doctor's Order...</div>
             <div style={{ fontSize: 12, color: T.textMuted }}>Decoding medical abbreviations</div>
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-            {setTimeout(() => setStep(2), 2000) && null}
+            
+            
           </div>
         )}
         {step === 2 && (<>
@@ -1160,7 +1168,6 @@ function App() {
     root.render(React.createElement(App));
   </script>
   <script>
-    // Register service worker for PWA
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
